@@ -95,8 +95,14 @@ function! s:semindSearch(...)
 	endwhile
 
 	let semind = get(g:, 'semind_prog', 'semind')
+	let result = system(semind . ' search --format="%f:%l:%c: (%m) %C |%s"' . args_s)
 
-	cgetexpr system(semind . ' search --format="%f:%l:%c: (%m) %C |%s"' . args_s)
+	if len(result) == 0
+		echomsg "semind: nothing was found."
+		return
+	endif
+
+	cgetexpr result
 	execute('copen' . get(g:, 'semind_quickfix_size', 10))
 	let g:qfix_win = bufnr("$")
 	call setqflist([], 'a', {'title': 'search' . args_s})
