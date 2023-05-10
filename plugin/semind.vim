@@ -51,7 +51,7 @@ function! s:semindSearch(...)
 	let cmd = [
 		\ get(g:, 'semind_prog', 'semind'),
 		\ 'search',
-		\ '--format="%f:%l:%c: (%m) %C # %s"' ]
+		\ '--format="%f:%l:%c: (%m) %C # %s "' ]
 	for a in a:000
 		call add(cmd, shellescape(a))
 	endfor
