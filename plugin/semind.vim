@@ -77,7 +77,6 @@ function! s:semindSearch(...)
 	execute 'set' 'nowrap'
 endfunction
 
-command! -nargs=+ SemindSearch call s:semindSearch(<f-args>)
 
 function! s:quickfixToggle(forced)
 	if exists("g:qfix_win") && a:forced == 0
@@ -89,11 +88,11 @@ function! s:quickfixToggle(forced)
 	endif
 endfunction
 
-command -bang -nargs=? QFix call s:quickfixToggle(<bang>0)
-nmap <silent> <C-s>q :QFix<CR>
-
-command -bang -nargs=? SemindQuickSearchUsage call s:semindSearch(expand("<cword>"))
-nmap <silent> <C-s>s :SemindQuickSearchUsage<CR>
-
+command -bang -nargs=? QFixToggle                  call s:quickfixToggle(<bang>0)
+command -bang -nargs=? SemindQuickSearchUsage      call s:semindSearch(expand("<cword>"))
 command -bang -nargs=? SemindQuickSearchDefinition call s:semindSearch("-m", "def", expand("<cword>"))
+command       -nargs=+ SemindSearch                call s:semindSearch(<f-args>)
+
+nmap <silent> <C-s>q :QFixToggle<CR>
+nmap <silent> <C-s>s :SemindQuickSearchUsage<CR>
 nmap <silent> <C-s>d :SemindQuickSearchDefinition<CR>
