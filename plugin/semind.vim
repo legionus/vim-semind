@@ -47,6 +47,22 @@ function! s:quickFixFormater(info) abort
 	return l
 endfunction
 
+function! s:openResultBuffer()
+	let qf = get(g:, 'semind_window_position', []) + []
+
+	call add(qf, 'copen')
+	call add(qf, get(g:, 'semind_window_size', 10))
+
+	execute join(qf, ' ')
+
+	let g:qfix_win = bufnr("$")
+endfunction
+
+function! s:closeResultBuffer()
+	execute 'cclose'
+	unlet g:qfix_win
+endfunction
+
 function! s:semindSearch(...)
 	let cmd = [
 		\ get(g:, 'semind_prog', 'semind'),
@@ -63,13 +79,10 @@ function! s:semindSearch(...)
 		return
 	endif
 
-	execute 'copen' get(g:, 'semind_quickfix_size', 10)
-
-	let g:qfix_win = bufnr("$")
-
+	call s:openResultBuffer()
 	call setqflist([], 'r',
 				\ {
-				\ 'title': 'semind search results',
+				\ 'title': 'semind search results: ' . join(a:000, ' '),
 				\ 'efm': '%f:%l:%c: %o #%*[ 	]%m',
 				\ 'quickfixtextfunc': 's:quickFixFormater',
 				\ 'lines': result,
@@ -77,14 +90,11 @@ function! s:semindSearch(...)
 	execute 'set' 'nowrap'
 endfunction
 
-
 function! s:quickfixToggle(forced)
 	if exists("g:qfix_win") && a:forced == 0
-		execute 'cclose'
-		unlet g:qfix_win
+		call s:closeResultBuffer()
 	else
-		execute 'copen' get(g:, 'semind_quickfix_size', 10)
-		let g:qfix_win = bufnr("$")
+		call s:openResultBuffer()
 	endif
 endfunction
 
