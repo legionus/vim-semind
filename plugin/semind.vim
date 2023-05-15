@@ -49,9 +49,19 @@ endfunction
 
 function! s:openResultBuffer()
 	let qf = get(g:, 'semind_window_position', []) + []
+	let winsz = get(g:, 'semind_window_size', 10)
+
+	if get(g:, 'semind_window_shrink', 0) == 1
+		let result_len = get(g:, 'qfix_result_len', 0)
+		if result_len < winsz
+			let winsz = result_len + 1
+		else
+			let winsz = winsz
+		endif
+	endif
 
 	call add(qf, 'copen')
-	call add(qf, get(g:, 'semind_window_size', 10))
+	call add(qf, winsz)
 
 	execute join(qf, ' ')
 
@@ -78,6 +88,8 @@ function! s:semindSearch(...)
 		echomsg "semind: nothing was found."
 		return
 	endif
+
+	let g:qfix_result_len = len(result)
 
 	call s:openResultBuffer()
 	call setqflist([], 'r',

@@ -52,6 +52,10 @@ let g:semind_window_position = [ "topleft" ]
 
 " The parameter sets the size of the window (default: 10).
 let g:semind_window_size = 10
+
+" The parameter allows you to shrink the window with results if their number is
+" less than g:semind_window_size.
+let g:semind_window_shrink = 1
 ```
 
 ## License
